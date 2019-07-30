@@ -6,11 +6,13 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ridderapp/blog/auth/authevent.dart';
+import 'package:ridderapp/model/wallet.dart';
 import 'package:ridderapp/transaction/transaction-list.dart';
 
 import '../blog/auth/authbloc.dart';
 import '../model/user.dart';
 import '../base/customroute.dart';
+import '../repository/transactionrepo.dart';
 
 class HomePage extends StatefulWidget {
   //final AuthenticationBloc authenticationBloc;
@@ -23,7 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final Connectivity _connectivity = Connectivity();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  TrxRepository repo = new TrxRepository();
   AuthenticationBloc authenticationBloc;
   //String _connectionStatus;
   StreamSubscription<ConnectivityResult> _connectionChangeStream;
@@ -98,130 +100,149 @@ class _HomePageState extends State<HomePage> {
             _scaffoldKey.currentState.openDrawer();
           }
         },
-        child: Container(
-          decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 25.0),
-              padding: EdgeInsets.only(right: 10.0),
-              alignment: Alignment.bottomRight,
-              child: Icon((!hasConnection) ? Icons.signal_wifi_off : Icons.wifi,
-                  color: (!hasConnection) ? Colors.redAccent : Colors.white),
-            ),
-            Expanded(
-              child: Center(
-                child: Stack(alignment: Alignment.center, children: <Widget>[
+        child: new FutureBuilder(
+          future: repo.getWallet(2),
+            builder: (BuildContext context, AsyncSnapshot<Wallet> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data != null) {
+              return Container(
+                decoration:
+                    BoxDecoration(color: Theme.of(context).primaryColor),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(children: <Widget>[
                   Container(
-                    margin: EdgeInsets.fromLTRB(40, 80.0, 40, 20),
-                    padding: EdgeInsets.all(20.0),
-                    width: MediaQuery.of(context).size.width,
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          new BoxShadow(
-                            color: Colors.black,
-                            blurRadius: 20.0,
+                    margin: EdgeInsets.only(top: 25.0),
+                    padding: EdgeInsets.only(right: 10.0),
+                    alignment: Alignment.bottomRight,
+                    child: Icon(
+                        (!hasConnection) ? Icons.signal_wifi_off : Icons.wifi,
+                        color:
+                            (!hasConnection) ? Colors.redAccent : Colors.white),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child:
+                          Stack(alignment: Alignment.center, children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(40, 80.0, 40, 20),
+                          padding: EdgeInsets.all(20.0),
+                          width: MediaQuery.of(context).size.width,
+                          height: 200.0,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                new BoxShadow(
+                                  color: Colors.black,
+                                  blurRadius: 20.0,
+                                ),
+                              ],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: Colors.white),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "RM "+snapshot.data.balance.toString(),
+                                style: TextStyle(
+                                    color: Color(0xFF273746),
+                                    fontSize: 48.0,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "OpenSans"),
+                              ),
+                              Text(
+                                "Your Balance",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "OpenSans"),
+                              )
+                            ],
                           ),
-                        ],
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        color: Colors.white),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "RM 200.00",
-                          style: TextStyle(
-                              color: Color(0xFF273746),
-                              fontSize: 48.0,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "OpenSans"),
                         ),
-                        Text(
-                          "Your Balance",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "OpenSans"),
-                        )
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 25,
-                    child: Container(
-                      padding: EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            new BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 20.0,
+                        Positioned(
+                          top: 25,
+                          child: Container(
+                            padding: EdgeInsets.all(20.0),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  new BoxShadow(
+                                    color: Colors.black,
+                                    blurRadius: 20.0,
+                                  ),
+                                ],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                color: Color(0xFF34495E)),
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  "Welcome",
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .display1
+                                          .color,
+                                      fontStyle: FontStyle.italic,
+                                      fontFamily: "OpenSans"),
+                                ),
+                                Text(
+                                  snapshot.data.name,
+                                  style: TextStyle(
+                                      fontSize: 24.0,
+                                      color: Theme.of(context)
+                                          .primaryTextTheme
+                                          .display1
+                                          .color,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "OpenSans"),
+                                ),
+                              ],
                             ),
-                          ],
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          color: Color(0xFF34495E)),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            "Welcome",
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                color: Theme.of(context)
-                                    .primaryTextTheme
-                                    .display1
-                                    .color,
-                                fontStyle: FontStyle.italic,
-                                fontFamily: "OpenSans"),
                           ),
-                          Text(
-                            "TH MOK",
-                            style: TextStyle(
-                                fontSize: 24.0,
-                                color: Theme.of(context)
-                                    .primaryTextTheme
-                                    .display1
-                                    .color,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "OpenSans"),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              new CustomRoute(
+                                  builder: (context) => new TransactionList()),
+                            );
+                          },
+                          child: Container(
+                            child:
+                                new CircleAvatar(child: Icon(Icons.motorcycle)),
+                            width: 64.0,
+                            height: 64.0,
+                            margin: EdgeInsets.only(top: 260),
+                            padding: const EdgeInsets.all(2.0), // borde width
+                            decoration: new BoxDecoration(
+                              color: const Color(0xFFFFFFFF), // border color
+                              shape: BoxShape.circle,
+                            ),
                           ),
-                        ],
-                      ),
+                        )
+                      ]),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        new CustomRoute(
-                            builder: (context) => new TransactionList()),
-                      );
-                    },
-                    child: Container(
-                      child: new CircleAvatar(child: Icon(Icons.motorcycle)),
-                      width: 64.0,
-                      height: 64.0,
-                      margin: EdgeInsets.only(top: 260),
-                      padding: const EdgeInsets.all(2.0), // borde width
-                      decoration: new BoxDecoration(
-                        color: const Color(0xFFFFFFFF), // border color
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  )
+                  Text("(c) by 2019 GalaEats all right reserved.",
+                      style: TextStyle(
+                          fontFamily: 'OpenSans',
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15.0,
+                          color: Colors.white)),
+                  Divider(height: 10),
                 ]),
-              ),
-            ),
-            Text("(c) by 2019 GalaEats all right reserved.",
-                style: TextStyle(
-                    fontFamily: 'OpenSans',
-                    fontWeight: FontWeight.normal,
-                    fontSize: 15.0,
-                    color: Colors.white)),
-            Divider(height:10),
-          ]),
-        ),
+              );
+            } else {
+              return new CircularProgressIndicator();
+            }
+          }else{
+             return new CircularProgressIndicator();
+          }
+        }),
       ),
       drawer: displayDrawer(context),
     );

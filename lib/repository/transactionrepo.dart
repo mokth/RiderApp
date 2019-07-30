@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
 import 'package:ridderapp/model/redertrx.dart';
+import 'package:ridderapp/model/wallet.dart';
 import 'dart:convert';
 
 import '../model/user.dart';
@@ -120,6 +121,30 @@ class TrxRepository extends ApiBase {
     }
 
     return msg;
+  }
+
+    Future<Wallet> getWallet(int id) async {
+    Wallet wallet = new Wallet(name:"",balance:0.0);
+    String token = await getToken();
+
+    String url = apiURL + "rider/wallet/" + id.toString();
+    print(url);
+
+    var response = await http.get(url,
+        headers: {'content-type': 'application/json', 'Authorization': token});
+    print(response.statusCode);
+    //print(response.body);
+    dynamic resp = jsonDecode(response.body);
+    print(resp);
+    String msg;
+    if (resp["ok"] == "yes") {
+       wallet.name = resp["name"];
+       wallet.balance = resp["balance"];
+    } else {
+      msg = "Error deleting transaction....";
+    }
+
+    return wallet;
   }
   
   String getImageUrl(String imageFName){
