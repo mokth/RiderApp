@@ -1,0 +1,134 @@
+import 'dart:io';
+
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart';
+import 'package:ridderapp/model/redertrx.dart';
+import 'dart:convert';
+
+import '../model/user.dart';
+import '../base/apibase.dart';
+
+class TrxRepository extends ApiBase {
+  //post finished good, save
+  Future<String> postTransaction(RiderTrxDtl trx) async {
+    String token = await getToken();
+    User user = getAuthTokenInfo(token);
+    String url = apiURL + "rider/transaction";
+    print(url);
+    var body = jsonEncode(trx.toJson(trx, user.name));
+    print(body);
+    var response = await http.post(url,
+        headers: {'content-type': 'application/json', 'Authorization': token},
+        body: body);
+
+    print(response.statusCode);
+    //print(response.body);
+    dynamic resp = jsonDecode(response.body);
+    print(resp);
+    String msg;
+    if (resp['value']["ok"] == "yes") {
+      msg = resp['value']["newid"].toString();
+    } else {
+      msg = "0";
+    }
+    print(msg);
+    return msg;
+  }
+
+  Future<String> postImage(File file, int id) async {
+    String url = apiURL + "rider/uploadfile/" + id.toString();
+    var postUri = Uri.parse(url);
+    if (file == null) return "Invalid file object.";
+
+    String filename = basename(file.path);
+    String ext = extension(filename);
+    var request = http.MultipartRequest("POST", postUri);
+    request.files.add(new http.MultipartFile.fromBytes(
+        'file', await file.readAsBytes(),
+        filename: filename, contentType: MediaType('image', ext)));
+    var response = await request.send();
+    final respStr = await response.stream.bytesToString();
+
+    dynamic resp = jsonDecode(respStr);
+    print(resp["ok"]);
+    print(resp["filename"]);
+    //print(response.statusCode);
+    String msg ="Fail to upload image.";
+
+    if (resp["ok"]=="yes"){
+       msg = "Image Uploaded "; 
+    }
+   
+    return msg;
+  }
+
+  Future<List<RiderTrxDtl>> getTransactions({bool showAll:false}) async {
+    List<RiderTrxDtl> _trxlist = new List<RiderTrxDtl>();
+    String token = await getToken();
+    User user = getAuthTokenInfo(token);
+    print(user.name);
+    String url = apiURL +
+            "rider/transactions?\$filter=Rider_Name eq '" +user.name+"'" ;
+  
+    var response;
+    try {
+      response = await http.get(url, headers: {
+        'content-type': 'application/json',
+        'Authorization': token
+      });
+      print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw new Exception("Internal error happening at Server.");
+      }
+    } catch (e) {
+      print(e.toString());
+      throw new Exception(
+          "Error connecting to Server. Please check you mobile nextwork.");
+    }
+   // print(response);
+    dynamic resp = jsonDecode(response.body);
+
+    dynamic data = resp;
+    data.forEach((item) {
+     //  print(item);
+      _trxlist.add(RiderTrxDtl.fromTrxJson(item));
+    });
+    //print(data.length);
+
+    return _trxlist;
+  }
+  
+  //delete transaction
+  Future<String> deleteTransaction(int id) async {
+    String token = await getToken();
+
+    String url = apiURL + "rider/" + id.toString();
+    print(url);
+
+    var response = await http.delete(url,
+        headers: {'content-type': 'application/json', 'Authorization': token});
+    print(response.statusCode);
+    //print(response.body);
+    dynamic resp = jsonDecode(response.body);
+    print(resp);
+    String msg;
+    if (resp["ok"] == "yes") {
+      msg = "Transaction deleted";
+    } else {
+      msg = "Error deleting transaction....";
+    }
+
+    return msg;
+  }
+  
+  String getImageUrl(String imageFName){
+    String url ="";
+    if (imageFName.isNotEmpty){
+      url = imageURL+imageFName;
+    }else {
+      url = imageURL+"no_image_available.png";
+    }
+    return url;      
+  }
+}
