@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
@@ -46,53 +45,4 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-=======
-import 'dart:async';
-import 'package:meta/meta.dart';
-import 'package:bloc/bloc.dart';
-
-import '../../blog/auth/authevent.dart';
-import '../../blog/auth/authbloc.dart';
-import '../../repository/userreposity.dart';
-import 'login_event.dart';
-import 'login_state.dart';
-
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final UserRepository userRepository;
-  final AuthenticationBloc authenticationBloc;
-
-  LoginBloc({ @required this.userRepository,
-              @required this.authenticationBloc,
-            })  : assert(userRepository != null),
-                  assert(authenticationBloc != null);
-
-  @override
-  LoginState get initialState => LoginInitial();
-
-  
-  @override
-  Stream<LoginState> mapEventToState(LoginEvent event) async* {
-   
-    if (event is LoginButtonPressed) {
-      yield LoginLoading();
-       
-       try {
-         final token = await userRepository.authenticate(
-           username: event.username,
-           password: event.password,
-         );
-        if (token!=""){
-           authenticationBloc.dispatch(LoggedIn(token: token));
-           yield LoginInitial();
-        }else{
-          yield LoginFailure(error: "Invalid user id / password");
-        }
-        
-      } catch (error) {
-        yield LoginFailure(error: error.toString());
-      }
-    }
-  }
-
->>>>>>> 8c0d3405608fa3286722f27dcd88b889fd31b8c7
 }
