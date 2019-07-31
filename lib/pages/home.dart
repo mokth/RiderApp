@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ridderapp/blog/auth/authevent.dart';
 import 'package:ridderapp/model/wallet.dart';
+import 'package:ridderapp/transaction/acoount.dart';
 import 'package:ridderapp/transaction/transaction-list.dart';
 
 import '../blog/auth/authbloc.dart';
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           }
         },
         child: new FutureBuilder(
-          future: repo.getWallet(2),
+          future: repo.getWallet(),
             builder: (BuildContext context, AsyncSnapshot<Wallet> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data != null) {
@@ -272,6 +273,15 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 new CustomRoute(builder: (context) => new TransactionList()),
+              );
+            }),
+            Divider(
+              height: 20,
+            ),
+             menuItem('Account', Color(0xFF34495E), () {
+              Navigator.push(
+                context,
+                new CustomRoute(builder: (context) => new RiderAccount()),
               );
             }),
             Divider(

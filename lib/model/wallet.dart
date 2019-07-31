@@ -4,3 +4,4 @@ class Wallet {
 
   Wallet({this.name,this.balance});
 }
+
