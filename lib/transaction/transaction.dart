@@ -21,14 +21,13 @@ class TransactionEntry extends StatefulWidget {
   // final Transaction Transaction;
   final String editmode;
   final RiderTrxDtl trx;
-  TransactionEntry(this.trx,this.editmode, {Key key}) : super(key: key);
+  TransactionEntry(this.trx, this.editmode, {Key key}) : super(key: key);
 
   _TransactionState createState() => _TransactionState();
 }
 
 class _TransactionState extends State<TransactionEntry>
     with SingleTickerProviderStateMixin {
-  
   final TrxRepository repo = new TrxRepository();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _dateController = TextEditingController();
@@ -36,13 +35,13 @@ class _TransactionState extends State<TransactionEntry>
   final _trxtypeController = TextEditingController();
   final _amountController = TextEditingController();
   final _remarkController = TextEditingController();
-  
+
   bool _editMode;
   bool _saveChanges;
   TrxType refType;
   TrxTypeList trxTypeList;
   File _image;
-  String newID="";
+  String newID = "";
   RiderTrxDtl _trx;
 
   @override
@@ -53,13 +52,12 @@ class _TransactionState extends State<TransactionEntry>
     trxTypeList = new TrxTypeList();
     refType = trxTypeList.list[0];
     _dateController.text = Utility.dateToString(DateTime.now());
-    if (_editMode){
-      _trx = widget.trx; 
+    if (_editMode) {
+      _trx = widget.trx;
       loadData();
     } else {
-      _trx = null;   
-    } 
-    
+      _trx = null;
+    }
   }
 
   @override
@@ -71,13 +69,13 @@ class _TransactionState extends State<TransactionEntry>
     print(_trx.refType);
     print(_trx.trxType);
     _dateController.text = Utility.dateToString(_trx.trxDate);
-    var found= trxTypeList.list
-               .where((x)=>x.direction.toUpperCase()==_trx.trxType.toUpperCase() && 
-                           x.type.toUpperCase()==_trx.refType.toUpperCase());
-    if (found.length>0){
-       refType = found.first;
-       _descController.text = refType.desc;
-       _trxtypeController.text = refType.type;
+    var found = trxTypeList.list.where((x) =>
+        x.direction.toUpperCase() == _trx.trxType.toUpperCase() &&
+        x.type.toUpperCase() == _trx.refType.toUpperCase());
+    if (found.length > 0) {
+      refType = found.first;
+      _descController.text = refType.desc;
+      _trxtypeController.text = refType.type;
     }
     _amountController.text = _trx.amount.toString();
     _remarkController.text = _trx.remarks;
@@ -111,6 +109,15 @@ class _TransactionState extends State<TransactionEntry>
 
   Widget inputForm() {
     return Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            new BoxShadow(
+              color: Colors.black,
+              blurRadius: 20.0,
+            ),
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+          color: Colors.white),
       padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
       child: Column(
         children: <Widget>[
@@ -188,8 +195,9 @@ class _TransactionState extends State<TransactionEntry>
             controller: _remarkController,
           ),
           Divider(),
-          ButtonUtil.getRaiseButton(
-              uploadAttachment, "Attachment", Theme.of(context).primaryColor),
+          attachButtons(),
+          // ButtonUtil.getRaiseButton(
+          //     uploadAttachment, "Attachment", Theme.of(context).primaryColor),
           FutureBuilder<void>(
               future: retrieveLostData(),
               builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
@@ -202,8 +210,7 @@ class _TransactionState extends State<TransactionEntry>
                     );
                   case ConnectionState.done:
                     if (_image != null)
-                      return Image.file(_image,
-                          width: 200, height: 200, fit: BoxFit.cover);
+                      return imageBox();
                     else
                       return const Text(
                         'You have not yet picked an image.',
@@ -229,6 +236,63 @@ class _TransactionState extends State<TransactionEntry>
     );
   }
 
+  Widget imageBox() {
+    return Container(
+      height: 250,
+      width: 250,
+      decoration: BoxDecoration(
+          boxShadow: [
+            new BoxShadow(
+              color: Colors.black,
+              blurRadius: 20.0,
+            ),
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+          color: Colors.white),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.file(_image, width: 200, height: 200, fit: BoxFit.cover)
+        ],
+      ),
+    );
+  }
+
+  Widget attachButtons() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Row(children: <Widget>[
+        Expanded(
+          child: RaisedButton(
+            onPressed: () {
+              uploadAttachment(ImageSource.camera);
+            },
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.camera),
+                Text("Camera"),
+              ],
+            ),
+          ),
+        ),
+        Text(' '),
+        Expanded(
+            child: RaisedButton(
+          onPressed: () {
+            uploadAttachment(ImageSource.gallery);
+          },
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.image),
+              Text("Galary"),
+            ],
+          ),
+        )),
+      ]),
+    );
+  }
+
   Widget actionButtons() {
     return Container(
       padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
@@ -247,11 +311,11 @@ class _TransactionState extends State<TransactionEntry>
   }
 
   Future onCancelHandler() async {
-    if (_saveChanges){
+    if (_saveChanges) {
       Navigator.pop(context);
-    }else {
-      ConfirmAction action= await _asyncConfirmDialog(context);
-      if (action==ConfirmAction.ACCEPT){
+    } else {
+      ConfirmAction action = await _asyncConfirmDialog(context);
+      if (action == ConfirmAction.ACCEPT) {
         Navigator.pop(context);
       }
     }
@@ -263,31 +327,29 @@ class _TransactionState extends State<TransactionEntry>
   }
 
   bool validateInputs() {
-    if ( _dateController.text == "") {
+    if (_dateController.text == "") {
       SnackBarUtil.showSnackBar('Invalid trx date...', _scaffoldKey);
       return false;
     }
 
-    if ( _trxtypeController.text == "") {
+    if (_trxtypeController.text == "") {
       SnackBarUtil.showSnackBar('Invalid trx type...', _scaffoldKey);
       return false;
     }
 
     var amount = double.tryParse(_amountController.text);
     if (amount == null) {
-      SnackBarUtil.showSnackBar(
-          'Invalid trx amount...', _scaffoldKey);
+      SnackBarUtil.showSnackBar('Invalid trx amount...', _scaffoldKey);
       return false;
     }
     return true;
   }
 
   saveTransaction() {
-    if (!validateInputs())
-      return;
+    if (!validateInputs()) return;
 
-        int trxid = int.tryParse(newID);
-        _trx  = new RiderTrxDtl(
+    int trxid = int.tryParse(newID);
+    _trx = new RiderTrxDtl(
         amount: double.parse(_amountController.text),
         desc: _descController.text,
         refType: refType.type,
@@ -295,52 +357,55 @@ class _TransactionState extends State<TransactionEntry>
         trxDate: DateTime.now(),
         trxStatus: "Pending",
         trxType: refType.direction,
-        uid: (trxid==null)?0:trxid,
+        uid: (trxid == null) ? 0 : trxid,
         name: "");
 
-    repo.postTransaction(_trx)
-      .then((resp) {
-        String msg = "";
-        newID = resp;
-        if (resp=="0"){
-           msg = "Error submitting transaction!";
-        }else {
-           msg ="Transaction Submitted.";
-           _trx.uid = int.parse(newID);
-           _saveChanges =true;
-        }
-        SnackBarUtil.showSnackBar(msg, _scaffoldKey);
-        //anyAttachment();
-        //resetForm();
-      }, onError: (e) {
-        SnackBarUtil.showSnackBar("Error submitting data....", _scaffoldKey);
-      });
+    repo.postTransaction(_trx).then((resp) {
+      String msg = "";
+      newID = resp;
+      if (resp == "0") {
+        msg = "Error submitting transaction!";
+      } else {
+        msg = "Transaction Submitted.";
+        _trx.uid = int.parse(newID);
+        _saveChanges = true;
+      }
+      SnackBarUtil.showSnackBar(msg, _scaffoldKey);
+      //anyAttachment();
+      //resetForm();
+    }, onError: (e) {
+      SnackBarUtil.showSnackBar("Error submitting data....", _scaffoldKey);
+    });
   }
 
-  Future getImageFromDeviceAndPost() async {
+  Future getImageFromDeviceAndPost(ImageSource imagsource) async {
     try {
-      _image = await ImagePicker.pickImage( //8:10
-         source: ImageSource.camera, maxHeight: 1024, maxWidth: 2048);
-      
-     int id = _trx.uid;
-     repo.postImage(_image,id).then((val){
-       _saveChanges =true;
-       SnackBarUtil.showSnackBar(val, _scaffoldKey);
-     },onError: (e){
+      _image = await ImagePicker.pickImage(
+          //8:10
+          source: imagsource, //ImageSource.camera,
+          maxHeight: 1024,
+          maxWidth: 2048);
+
+      int id = _trx.uid;
+      repo.postImage(_image, id).then((val) {
+        _saveChanges = true;
+        SnackBarUtil.showSnackBar(val, _scaffoldKey);
+      }, onError: (e) {
         SnackBarUtil.showSnackBar("Error uploading image...", _scaffoldKey);
-     });
+      });
     } catch (e) {
       print(e);
     }
-    setState(() {});  
+    setState(() {});
   }
 
-  Future uploadAttachment() async {
-     if (_trx==null || _trx.uid <=0){
-        SnackBarUtil.showSnackBar("Please submit Transaction first.", _scaffoldKey);
-       return;
-     }
-     await getImageFromDeviceAndPost();
+  Future uploadAttachment(ImageSource source) async {
+    if (_trx == null || _trx.uid <= 0) {
+      SnackBarUtil.showSnackBar(
+          "Please submit Transaction first.", _scaffoldKey);
+      return;
+    }
+    await getImageFromDeviceAndPost(source);
   }
 
   Future<void> retrieveLostData() async {
@@ -360,32 +425,31 @@ class _TransactionState extends State<TransactionEntry>
   void resetForm() {
     setState(() {});
   }
- 
-Future<ConfirmAction> _asyncConfirmDialog(BuildContext context) async {
-  return showDialog<ConfirmAction>(
-    context: context,
-    barrierDismissible: false, // user must tap button for close dialog!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Message'),
-        content: const Text(
-            'Changes not save yet, Confirm to leave?'),
-        actions: <Widget>[
-          FlatButton(
-            child: const Text('NO'),
-            onPressed: () {
-              Navigator.of(context).pop(ConfirmAction.CANCEL);
-            },
-          ),
-          FlatButton(
-            child: const Text('YES'),
-            onPressed: () {
-              Navigator.of(context).pop(ConfirmAction.ACCEPT);
-            },
-          )
-        ],
-      );
-    },
-  );
-}
+
+  Future<ConfirmAction> _asyncConfirmDialog(BuildContext context) async {
+    return showDialog<ConfirmAction>(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Message'),
+          content: const Text('Changes not save yet, Confirm to leave?'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('NO'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.CANCEL);
+              },
+            ),
+            FlatButton(
+              child: const Text('YES'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.ACCEPT);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
 }

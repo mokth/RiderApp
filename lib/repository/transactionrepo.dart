@@ -72,9 +72,8 @@ class TrxRepository extends ApiBase {
     print(user.name);
     String url = apiURL +
         "rider/transactions?\$filter=Rider_Name eq '" +
-        user.name +
-        "'";
-
+        user.name +"' & \$orderby=TransactionDate desc";
+  print(url);
     var response;
     try {
       response = await http.get(url, headers: {
@@ -99,7 +98,9 @@ class TrxRepository extends ApiBase {
       _trxlist.add(RiderTrxDtl.fromTrxJson(item));
     });
     //print(data.length);
-
+     _trxlist.sort((a,b){
+        return b.trxDate.compareTo(a.trxDate) ;
+     });
     return _trxlist;
   }
 

@@ -14,6 +14,7 @@ import '../blog/auth/authbloc.dart';
 import '../model/user.dart';
 import '../base/customroute.dart';
 import '../repository/transactionrepo.dart';
+import 'loading_indicator.dart';
 
 class HomePage extends StatefulWidget {
   //final AuthenticationBloc authenticationBloc;
@@ -102,148 +103,160 @@ class _HomePageState extends State<HomePage> {
           }
         },
         child: new FutureBuilder(
-          future: repo.getWallet(),
+            future: repo.getWallet(),
             builder: (BuildContext context, AsyncSnapshot<Wallet> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data != null) {
-              return Container(
-                decoration:
-                    BoxDecoration(color: Theme.of(context).primaryColor),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Column(children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 25.0),
-                    padding: EdgeInsets.only(right: 10.0),
-                    alignment: Alignment.bottomRight,
-                    child: Icon(
-                        (!hasConnection) ? Icons.signal_wifi_off : Icons.wifi,
-                        color:
-                            (!hasConnection) ? Colors.redAccent : Colors.white),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child:
-                          Stack(alignment: Alignment.center, children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.fromLTRB(40, 80.0, 40, 20),
-                          padding: EdgeInsets.all(20.0),
-                          width: MediaQuery.of(context).size.width,
-                          height: 200.0,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                new BoxShadow(
-                                  color: Colors.black,
-                                  blurRadius: 20.0,
-                                ),
-                              ],
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              color: Colors.white),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "RM "+snapshot.data.balance.toString(),
-                                style: TextStyle(
-                                    color: Color(0xFF273746),
-                                    fontSize: 48.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "OpenSans"),
-                              ),
-                              Text(
-                                "Your Balance",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "OpenSans"),
-                              )
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                          top: 25,
-                          child: Container(
-                            padding: EdgeInsets.all(20.0),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  new BoxShadow(
-                                    color: Colors.black,
-                                    blurRadius: 20.0,
+              if (snapshot.hasData) {
+                if (snapshot.data != null) {
+                  return Container(
+                    decoration:
+                        BoxDecoration(color: Theme.of(context).primaryColor),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(top: 25.0),
+                        padding: EdgeInsets.only(right: 10.0),
+                        alignment: Alignment.bottomRight,
+                        child: Icon(
+                            (!hasConnection)
+                                ? Icons.signal_wifi_off
+                                : Icons.wifi,
+                            color: (!hasConnection)
+                                ? Colors.redAccent
+                                : Colors.white),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Stack(alignment: Alignment.center, children: <
+                              Widget>[
+                            Container(
+                              margin: EdgeInsets.fromLTRB(40, 80.0, 40, 20),
+                              padding: EdgeInsets.all(20.0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 200.0,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    new BoxShadow(
+                                      color: Colors.black,
+                                      blurRadius: 20.0,
+                                    ),
+                                  ],
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                  color: Colors.white),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "RM " + snapshot.data.balance.toString(),
+                                    style: TextStyle(
+                                        color: Color(0xFF273746),
+                                        fontSize: 48.0,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "OpenSans"),
                                   ),
+                                  Text(
+                                    "Your Balance",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "OpenSans"),
+                                  )
                                 ],
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                color: Color(0xFF34495E)),
-                            child: Column(
-                              children: <Widget>[
-                                Text(
-                                  "Welcome",
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Theme.of(context)
-                                          .primaryTextTheme
-                                          .display1
-                                          .color,
-                                      fontStyle: FontStyle.italic,
-                                      fontFamily: "OpenSans"),
-                                ),
-                                Text(
-                                  snapshot.data.name,
-                                  style: TextStyle(
-                                      fontSize: 24.0,
-                                      color: Theme.of(context)
-                                          .primaryTextTheme
-                                          .display1
-                                          .color,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "OpenSans"),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
+                            Positioned(
+                              top: 25,
+                              width: 250,
+                              child: Container(
+                                padding: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      new BoxShadow(
+                                        color: Colors.black,
+                                        blurRadius: 20.0,
+                                      ),
+                                    ],
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    color: Color(0xFF34495E)),
+                                child: Column(
+                                  children: <Widget>[
+                                    Text(
+                                      "Welcome",
+                                      style: TextStyle(
+                                          fontSize: 13.0,
+                                          color: Theme.of(context)
+                                              .primaryTextTheme
+                                              .display1
+                                              .color,
+                                          fontStyle: FontStyle.italic,
+                                          fontFamily: "OpenSans"),
+                                    ),
+                                   
+                                     Text(
+                                        snapshot.data.name,
+                                        maxLines: 3,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            color: Theme.of(context)
+                                                .primaryTextTheme
+                                                .display1
+                                                .color,
+                                            //fontWeight: FontWeight.bold,
+                                            fontFamily: "OpenSans"),
+                                      ),
+                                  
+                                  ],
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  new CustomRoute(
+                                      builder: (context) =>
+                                          new TransactionList()),
+                                );
+                              },
+                              child: Container(
+                                child: new CircleAvatar(
+                                    child: Icon(Icons.motorcycle)),
+                                width: 64.0,
+                                height: 64.0,
+                                margin: EdgeInsets.only(top: 260),
+                                padding:
+                                    const EdgeInsets.all(2.0), // borde width
+                                decoration: new BoxDecoration(
+                                  color:
+                                      const Color(0xFFFFFFFF), // border color
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            )
+                          ]),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              new CustomRoute(
-                                  builder: (context) => new TransactionList()),
-                            );
-                          },
-                          child: Container(
-                            child:
-                                new CircleAvatar(child: Icon(Icons.motorcycle)),
-                            width: 64.0,
-                            height: 64.0,
-                            margin: EdgeInsets.only(top: 260),
-                            padding: const EdgeInsets.all(2.0), // borde width
-                            decoration: new BoxDecoration(
-                              color: const Color(0xFFFFFFFF), // border color
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        )
-                      ]),
-                    ),
-                  ),
-                  Text("(c) by 2019 GalaEats all right reserved.",
-                      style: TextStyle(
-                          fontFamily: 'OpenSans',
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15.0,
-                          color: Colors.white)),
-                  Divider(height: 10),
-                ]),
-              );
-            } else {
-              return new CircularProgressIndicator();
-            }
-          }else{
-             return new CircularProgressIndicator();
-          }
-        }),
+                      ),
+                      Text("(c) by 2019 GalaEats all right reserved.",
+                          style: TextStyle(
+                              fontFamily: 'OpenSans',
+                              fontWeight: FontWeight.normal,
+                              fontSize: 15.0,
+                              color: Colors.white)),
+                      Divider(height: 10),
+                    ]),
+                  );
+                } else {
+                  return new LoadingIndicator();
+                }
+              } else {
+                return new LoadingIndicator();
+              }
+            }),
       ),
       drawer: displayDrawer(context),
     );
@@ -278,7 +291,7 @@ class _HomePageState extends State<HomePage> {
             Divider(
               height: 20,
             ),
-             menuItem('Account', Color(0xFF34495E), () {
+            menuItem('Account', Color(0xFF34495E), () {
               Navigator.push(
                 context,
                 new CustomRoute(builder: (context) => new RiderAccount()),
@@ -292,15 +305,15 @@ class _HomePageState extends State<HomePage> {
               Navigator.pop(context);
             }),
             Divider(),
-            Container(
-              height: 400,
-              decoration: new BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/ridder.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
+            // Container(
+            //   height: 400,
+            //   decoration: new BoxDecoration(
+            //     image: DecorationImage(
+            //       image: AssetImage('images/ridder.png'),
+            //       fit: BoxFit.fill,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

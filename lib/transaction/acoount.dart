@@ -18,15 +18,14 @@ class _RiderAccountState extends State<RiderAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-       appBar: AppBar(
+      appBar: AppBar(
         title: Text('My Account'),
       ),
       body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor),
-         child:SingleChildScrollView(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+        child: SingleChildScrollView(
           child: new FutureBuilder(
               future: repo.getAccount(),
               builder: (BuildContext context, AsyncSnapshot<Account> snapshot) {
@@ -34,13 +33,27 @@ class _RiderAccountState extends State<RiderAccount> {
                   if (snapshot.data != null) {
                     return accountWidget(snapshot.data);
                   } else {
-                    return new CircularProgressIndicator();
+                    return loading();
                   }
                 } else {
-                  return new CircularProgressIndicator();
+                  return loading();
                 }
               }),
         ),
+      ),
+    );
+  }
+
+  Widget loading() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+        ],
       ),
     );
   }
@@ -49,17 +62,17 @@ class _RiderAccountState extends State<RiderAccount> {
     return Form(
       key: _formKey,
       child: Container(
-        margin: EdgeInsets.fromLTRB(20, 40, 20, 40),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         padding: EdgeInsets.all(20),
-         decoration: BoxDecoration(
-              boxShadow: [
-                new BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 20.0,
-                ),
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              color: Colors.white),
+        decoration: BoxDecoration(
+            boxShadow: [
+              new BoxShadow(
+                color: Colors.black,
+                blurRadius: 20.0,
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            color: Colors.white),
         child: Column(
           children: <Widget>[
             TextFormField(
@@ -68,53 +81,51 @@ class _RiderAccountState extends State<RiderAccount> {
               decoration: InputDecoration(labelText: 'User ID', hintText: 'ID'),
             ),
             TextFormField(
-               readOnly: true,
+              readOnly: true,
               initialValue: acct.fullName,
               decoration:
                   InputDecoration(labelText: 'Full Name', hintText: 'Name'),
             ),
             TextFormField(
-               readOnly: true,
+              readOnly: true,
               initialValue: acct.icno,
               decoration:
                   InputDecoration(labelText: 'NRIC No.', hintText: 'IC No.'),
             ),
             TextFormField(
-               readOnly: true,
+              readOnly: true,
               initialValue: acct.contact,
               decoration:
                   InputDecoration(labelText: 'Phone No.', hintText: 'Phone'),
             ),
             TextFormField(
-               readOnly: true,
+              readOnly: true,
               initialValue: acct.email,
               decoration:
                   InputDecoration(labelText: 'Email', hintText: 'Email'),
             ),
             TextFormField(
-               readOnly: true,
+              readOnly: true,
               initialValue: acct.plateNo,
               decoration: InputDecoration(
                   labelText: 'Vechicle No.', hintText: 'Vechicle No.'),
             ),
             TextFormField(
-               readOnly: true,
+              readOnly: true,
               initialValue: acct.status,
               decoration:
                   InputDecoration(labelText: 'Status', hintText: 'Status'),
             ),
             TextFormField(
-               readOnly: true,
+              readOnly: true,
               initialValue: acct.joinDate.toString(),
               decoration: InputDecoration(
                   labelText: 'Join Date', hintText: 'Join Date'),
             ),
             Divider(),
-            ButtonUtil.getRaiseButton(
-              (){
-                Navigator.of(context).pop();
-              }, "OK", Theme.of(context).primaryColor),
-        
+            ButtonUtil.getRaiseButton(() {
+              Navigator.of(context).pop();
+            }, "OK", Theme.of(context).primaryColor),
           ],
         ),
       ),

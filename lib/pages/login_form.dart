@@ -7,6 +7,7 @@ import '../blog/login/login_event.dart';
 import '../blog/login/login_state.dart';
 
 import 'Settings/setting.dart';
+import 'loading_indicator.dart';
 
 class LoginForm extends StatefulWidget {
   final LoginBloc loginBloc;
@@ -137,7 +138,7 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                       Container(
                         child: state is LoginLoading
-                            ? CircularProgressIndicator()
+                            ? LoadingIndicator()
                             : null,
                       ),
                     ],
