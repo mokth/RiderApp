@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TextStyleUtil {
-  static TextStyle getButtonTextStyle() {
+  static TextStyle getButtonTextStyle({fontSize:18.0}) {
     return TextStyle(
-        color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w700);
+        color: Colors.white, fontSize: fontSize, fontWeight: FontWeight.w700);
   }
 
   static InputDecoration getFormFieldInputDecoration(caption) {

@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ridderapp/blog/auth/authevent.dart';
 import 'package:ridderapp/model/wallet.dart';
 import 'package:ridderapp/transaction/acoount.dart';
+import 'package:ridderapp/transaction/daily-commision.dart';
 import 'package:ridderapp/transaction/transaction-list.dart';
 
 import '../blog/auth/authbloc.dart';
@@ -295,6 +296,15 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 new CustomRoute(builder: (context) => new RiderAccount()),
+              );
+            }),
+            Divider(
+              height: 20,
+            ),
+             menuItem('Daily Commision', Color(0xFF34495E), () {
+              Navigator.push(
+                context,
+                new CustomRoute(builder: (context) => new DailyCommision()),
               );
             }),
             Divider(

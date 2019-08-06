@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
 import 'package:ridderapp/model/account.dart';
+import 'package:ridderapp/model/commision.dart';
+import 'package:ridderapp/model/commison-req.dart';
 import 'package:ridderapp/model/redertrx.dart';
 import 'package:ridderapp/model/wallet.dart';
 import 'dart:convert';
@@ -193,5 +195,35 @@ class TrxRepository extends ApiBase {
       url = imageURL + "no_image_available.png";
     }
     return url;
+  }
+
+  Future<List<Commision>> getDailyCommision(DateTime date) async {
+    List<Commision> list = new List<Commision>();
+    String token = await getToken();
+    User user =getAuthTokenInfo(token);
+    date = new DateTime(2019,01,29);
+    CommissionRequest req = new CommissionRequest(name: 'asep2810@gala365.my',date: date,month: date.month,year:date.year);
+    String url = apiURL + "rider/commission/daily";
+    print(url);
+    var body = jsonEncode(req.toJson(req)); 
+    print(body);
+    var response = await http.post(url,
+                          headers: {'content-type': 'application/json', 'Authorization': token},
+                          body: body);
+    
+    dynamic resp = jsonDecode(response.body);
+    //print(resp);
+    String msg;
+    if (resp["ok"] == "yes") {
+        var data = resp["data"];
+        data.forEach((item) {
+         //  print(item);
+          list.add(Commision.fromJson(item));
+        });
+    } else {
+      msg = "Error deleting transaction....";
+    }
+    //print('done...');
+    return list;
   }
 }
