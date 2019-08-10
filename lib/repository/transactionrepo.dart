@@ -202,7 +202,7 @@ class TrxRepository extends ApiBase {
     String token = await getToken();
     User user =getAuthTokenInfo(token);
     //date = new DateTime(2019,01,29);
-    CommissionRequest req = new CommissionRequest(name: 'asep2810@gala365.my',date: date,month: date.month,year:date.year);
+    CommissionRequest req = new CommissionRequest(name: user.name,date: date,month: date.month,year:date.year);
     String url = apiURL + "rider/commission/daily";
     print(url);
     var body = jsonEncode(req.toJson(req)); 

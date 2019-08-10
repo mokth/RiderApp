@@ -138,7 +138,7 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                       Container(
                         child: state is LoginLoading
-                            ? LoadingIndicator()
+                            ? CircularProgressIndicator()
                             : null,
                       ),
                     ],

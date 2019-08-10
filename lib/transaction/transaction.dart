@@ -195,16 +195,20 @@ class _TransactionState extends State<TransactionEntry>
             controller: _remarkController,
           ),
           Divider(),
-          attachButtons(),
+          (_saveChanges)?attachButtons():Divider(height: 2),
           // ButtonUtil.getRaiseButton(
           //     uploadAttachment, "Attachment", Theme.of(context).primaryColor),
-          FutureBuilder<void>(
+          (!_saveChanges)?Divider(height: 2):FutureBuilder<void>(
               future: retrieveLostData(),
               builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
+                   return  const Text(
+                      '',
+                      textAlign: TextAlign.center,
+                    );
                   case ConnectionState.waiting:
-                    return const Text(
+                    return  const Text(
                       'You have not yet picked an image.',
                       textAlign: TextAlign.center,
                     );
@@ -368,7 +372,10 @@ class _TransactionState extends State<TransactionEntry>
       } else {
         msg = "Transaction Submitted.";
         _trx.uid = int.parse(newID);
-        _saveChanges = true;
+        setState(() {
+           _saveChanges = true;
+        });
+       
       }
       SnackBarUtil.showSnackBar(msg, _scaffoldKey);
       //anyAttachment();

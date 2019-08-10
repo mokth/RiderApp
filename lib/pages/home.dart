@@ -307,15 +307,15 @@ class _HomePageState extends State<HomePage> {
                 new CustomRoute(builder: (context) => new DailyCommision()),
               );
             }),
-            Divider(
-              height: 20,
-            ),
-             menuItem('Monthly Commision', Color(0xFF34495E), () {
-              Navigator.push(
-                context,
-                new CustomRoute(builder: (context) => new DailyCommision()),
-              );
-            }),
+            // Divider(
+            //   height: 20,
+            // ),
+            //  menuItem('Monthly Commision', Color(0xFF34495E), () {
+            //   Navigator.push(
+            //     context,
+            //     new CustomRoute(builder: (context) => new DailyCommision()),
+            //   );
+            // }),
             Divider(
               height: 20,
             ),
