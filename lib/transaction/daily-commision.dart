@@ -154,7 +154,7 @@ class _DailyCommisionState extends State<DailyCommision> {
       );
     }
     _totalAmt = 0.00;
-    transactions.forEach((x) => {_totalAmt = _totalAmt + x.commission});
+    transactions.forEach((x) => _totalAmt = _totalAmt + x.commission);
     streamController.add(_totalAmt);
 
     return Container(
