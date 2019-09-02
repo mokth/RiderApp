@@ -7,8 +7,9 @@ class Account {
   DateTime joinDate;
   String status;
   String email;
+  String nickname;
 
   Account({this.name,this.fullName,this.contact,
           this.icno,this.plateNo,this.joinDate,
-          this.status,this.email});
+          this.status,this.email,this.nickname});
 }

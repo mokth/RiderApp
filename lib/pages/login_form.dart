@@ -85,6 +85,7 @@ class _LoginFormState extends State<LoginForm> {
                       TextFormField(
                         decoration: InputDecoration(
                             labelText: 'User ID',
+                            prefix: Icon(Icons.person_pin),
                             filled: true,
                             fillColor: Colors.white),
                         controller: _usernameController,
@@ -93,6 +94,7 @@ class _LoginFormState extends State<LoginForm> {
                       TextFormField(
                         decoration: InputDecoration(
                             labelText: 'Password',
+                            prefix: Icon(Icons.lock),
                             filled: true,
                             fillColor: Colors.white),
                         controller: _passwordController,
@@ -124,7 +126,7 @@ class _LoginFormState extends State<LoginForm> {
                       RaisedButton(
                         padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
                         color: Colors.pinkAccent,
-                      
+                        splashColor: Colors.amberAccent,
                         onPressed: state is! LoginLoading
                             ? _onLoginButtonPressed
                             : null,

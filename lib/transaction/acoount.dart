@@ -78,49 +78,49 @@ class _RiderAccountState extends State<RiderAccount> {
             TextFormField(
               readOnly: true,
               initialValue: acct.name,
-              decoration: InputDecoration(labelText: 'User ID', hintText: 'ID'),
+              decoration: InputDecoration(labelText: 'User ID', hintText: 'ID',labelStyle: TextStyle(color:Color(0xfbb2E4053))),
             ),
             TextFormField(
               readOnly: true,
               initialValue: acct.fullName,
               decoration:
-                  InputDecoration(labelText: 'Full Name', hintText: 'Name'),
+                  InputDecoration(labelText: 'Full Name', hintText: 'Name',labelStyle: TextStyle(color:Color(0xfbb2E4053))),
             ),
             TextFormField(
               readOnly: true,
               initialValue: acct.icno,
               decoration:
-                  InputDecoration(labelText: 'NRIC No.', hintText: 'IC No.'),
+                  InputDecoration(labelText: 'NRIC No.', hintText: 'IC No.',labelStyle: TextStyle(color:Color(0xfbb2E4053))),
             ),
             TextFormField(
               readOnly: true,
               initialValue: acct.contact,
               decoration:
-                  InputDecoration(labelText: 'Phone No.', hintText: 'Phone'),
+                  InputDecoration(labelText: 'Phone No.', hintText: 'Phone',labelStyle: TextStyle(color:Color(0xfbb2E4053))),
             ),
             TextFormField(
               readOnly: true,
               initialValue: acct.email,
               decoration:
-                  InputDecoration(labelText: 'Email', hintText: 'Email'),
+                  InputDecoration(labelText: 'Email', hintText: 'Email',labelStyle: TextStyle(color:Color(0xfbb2E4053))),
             ),
             TextFormField(
               readOnly: true,
               initialValue: acct.plateNo,
               decoration: InputDecoration(
-                  labelText: 'Vechicle No.', hintText: 'Vechicle No.'),
+                  labelText: 'Vechicle No.', hintText: 'Vechicle No.',labelStyle: TextStyle(color:Color(0xfbb2E4053))),
             ),
             TextFormField(
               readOnly: true,
               initialValue: acct.status,
               decoration:
-                  InputDecoration(labelText: 'Status', hintText: 'Status'),
+                  InputDecoration(labelText: 'Status', hintText: 'Status',labelStyle: TextStyle(color:Color(0xfbb2E4053))),
             ),
             TextFormField(
               readOnly: true,
               initialValue: acct.joinDate.toString(),
               decoration: InputDecoration(
-                  labelText: 'Join Date', hintText: 'Join Date'),
+                  labelText: 'Join Date', hintText: 'Join Date',labelStyle: TextStyle(color:Color(0xfbb2E4053))),
             ),
             Divider(),
             ButtonUtil.getRaiseButton(() {

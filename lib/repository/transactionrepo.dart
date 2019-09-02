@@ -147,6 +147,7 @@ class TrxRepository extends ApiBase {
     if (resp["ok"] == "yes") {
       wallet.name = resp["name"];
       wallet.balance = resp["balance"];
+      wallet.nickname = resp["nickname"]==null?resp["name"]:resp["nickname"];
     } else {
       msg = "Error deleting transaction....";
     }
@@ -178,6 +179,7 @@ class TrxRepository extends ApiBase {
       wallet.joinDate =  resp["joinDate"]!=null?DateTime.parse(resp["joinDate"]):null;
       wallet.plateNo = resp["plateNo"];
       wallet.status = resp["status"];
+      wallet.nickname = resp["nickname"];
     } else {
       msg = "Error deleting transaction....";
     }

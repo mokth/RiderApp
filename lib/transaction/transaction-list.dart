@@ -136,7 +136,8 @@ class _TransactionListState extends State<TransactionList> {
                       flex: 2,
                       child: (item.trxType.toUpperCase()=="OUT")?
                                DisplayUtil.listItemText(item.amount.toString()+" -",
-                                fontSize: 16.0,textAlign: TextAlign.right,fontWeight: FontWeight.bold)
+                               color: Colors.red,
+                                fontSize: 17.0,textAlign: TextAlign.right,fontWeight: FontWeight.bold)
                                :DisplayUtil.listItemText("",
                                    fontSize: 14.0,textAlign: TextAlign.right)
                    ),
@@ -144,7 +145,8 @@ class _TransactionListState extends State<TransactionList> {
                       flex: 2,
                       child: (item.trxType.toUpperCase()=="IN")?
                                DisplayUtil.listItemText(item.amount.toString()+" +",
-                                fontSize: 16.0,textAlign: TextAlign.right,fontWeight: FontWeight.bold)
+                               color: Colors.green,
+                                fontSize: 17.0,textAlign: TextAlign.right,fontWeight: FontWeight.bold)
                                :DisplayUtil.listItemText("",
                                    fontSize: 14.0,textAlign: TextAlign.right)
                    ),

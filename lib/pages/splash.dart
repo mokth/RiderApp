@@ -59,7 +59,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                 ShowUp(
                 child:
                 Container(
-                  margin: EdgeInsets.only(top:140.0),
+                  margin: EdgeInsets.only(top:150.0),
                  child:              
                  Center(
                   child: Text(

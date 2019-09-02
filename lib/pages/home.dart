@@ -109,8 +109,22 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.hasData) {
                 if (snapshot.data != null) {
                   return Container(
-                    decoration:
-                        BoxDecoration(color: Theme.of(context).primaryColor),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        // Where the linear gradient begins and ends
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        // Add one stop for each color. Stops should increase from 0 to 1
+                        stops: [0.1, 0.5, 0.7, 0.9],
+                        colors: [
+                          // Colors are easy thanks to Flutter's Colors class.
+                          Colors.indigo[800],
+                          Colors.indigo[700],
+                          Colors.indigo[600],
+                          Colors.indigo[400],
+                        ],
+                      ),
+                    ),
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     child: Column(children: <Widget>[
@@ -144,7 +158,20 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0)),
-                                  color: Colors.white),
+                                   gradient: LinearGradient(
+                        // Where the linear gradient begins and ends
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        // Add one stop for each color. Stops should increase from 0 to 1
+                        stops: [0.1, 0.5, 0.7, 0.9],
+                        colors: [
+                          // Colors are easy thanks to Flutter's Colors class.
+                          Colors.white60,
+                          Colors.white,
+                          Colors.white,
+                          Colors.white70,
+                        ],
+                      ),),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
@@ -195,22 +222,20 @@ class _HomePageState extends State<HomePage> {
                                           fontStyle: FontStyle.italic,
                                           fontFamily: "OpenSans"),
                                     ),
-                                   
-                                     Text(
-                                        snapshot.data.name,
-                                        maxLines: 3,
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            color: Theme.of(context)
-                                                .primaryTextTheme
-                                                .display1
-                                                .color,
-                                            //fontWeight: FontWeight.bold,
-                                            fontFamily: "OpenSans"),
-                                      ),
-                                  
+                                    Text(
+                                      snapshot.data.nickname,
+                                      maxLines: 3,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          color: Theme.of(context)
+                                              .primaryTextTheme
+                                              .display1
+                                              .color,
+                                          //fontWeight: FontWeight.bold,
+                                          fontFamily: "OpenSans"),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -236,7 +261,12 @@ class _HomePageState extends State<HomePage> {
                                   color:
                                       const Color(0xFFFFFFFF), // border color
                                   shape: BoxShape.circle,
+                                   gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [Color(0xFFFFFFFF), Colors.black]),
                                 ),
+                                
                               ),
                             )
                           ]),
@@ -301,7 +331,7 @@ class _HomePageState extends State<HomePage> {
             Divider(
               height: 20,
             ),
-             menuItem('Daily Commision', Color(0xFF34495E), () {
+            menuItem('Daily Commision', Color(0xFF34495E), () {
               Navigator.push(
                 context,
                 new CustomRoute(builder: (context) => new DailyCommision()),
